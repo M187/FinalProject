@@ -2,18 +2,33 @@ package com.udacity.gradle.builditbigger;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.JokeGenerator;
+
 
 public class MainActivity extends ActionBarActivity {
+
+    private String responseString;
+    private RequestQueue mRequestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRequestQueue = getRequestQueue();
     }
 
 
@@ -40,8 +55,44 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+
+        volleyStringRequst("http://localhost:8080/_ah/api/myApi/v1/joke");
+
+        Toast.makeText(this, responseString, Toast.LENGTH_SHORT).show();
     }
 
+    public void volleyStringRequst(String url){
 
+        String  REQUEST_TAG = "com.androidtutorialpoint.volleyStringRequest";
+        //progressDialog.setMessage("Loading...");
+        //progressDialog.show();
+
+        StringRequest strReq = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Volley", response.toString());
+                responseString = response;
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("Volley", "Error: " + error.getMessage());
+            }
+        });
+        // Adding String request to request queue
+        this.addToRequestQueue(strReq, REQUEST_TAG);
+    }
+
+    private RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getBaseContext().getApplicationContext());
+        }
+        return mRequestQueue;
+    }
+
+    public <T> void addToRequestQueue(Request<T> req,String tag) {
+        req.setTag(tag);
+        getRequestQueue().add(req);
+    }
 }
