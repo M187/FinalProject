@@ -4,6 +4,8 @@ android {
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
 
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "com.udacity.gradle.builditbigger"
         minSdkVersion 16
