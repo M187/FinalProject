@@ -27,6 +27,9 @@ public class MainActivity extends ActionBarActivity {
 
     private RequestQueue mRequestQueue;
 
+    private final String host = "127.0.0.1";
+    private final String port = "8080";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         fetchingJoke = true;
-        volleyStringRequst("http://127.0.0.1:8080/_ah/api/myApi/v1/joke");
+        volleyStringRequst("http://" + host + ":" + port + "/_ah/api/myApi/v1/joke");
     }
 
     public void volleyStringRequst(String url) {
