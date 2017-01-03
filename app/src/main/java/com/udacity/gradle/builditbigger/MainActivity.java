@@ -86,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         fetchingJoke = false;
-                        jokeText = null;
+                        //jokeText = null;
                         mCountDownLatch.countDown();
                         VolleyLog.d("Volley", "Error: " + error.getMessage());
                     }
@@ -121,6 +121,7 @@ public class MainActivity extends ActionBarActivity {
                                 Intent intent = new Intent(getBaseContext(), JokeActicity.class);
                                 intent.putExtra("Joke", jokeText);
                                 startActivity(intent);
+                                break;
                             case "free":
                             default:
                                 Toast.makeText(getBaseContext(), jokeText, Toast.LENGTH_LONG).show();
