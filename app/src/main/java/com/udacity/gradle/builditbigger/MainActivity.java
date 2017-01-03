@@ -25,7 +25,6 @@ import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends ActionBarActivity {
 
-    private String responseString;
     private RequestQueue mRequestQueue;
 
     @Override
@@ -60,7 +59,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-        volleyStringRequst("http://192.168.1.100:8080/_ah/api/myApi/v1/joke");
+        fetchingJoke = true;
+        volleyStringRequst("http://127.0.0.1:8080/_ah/api/myApi/v1/joke");
     }
 
     public void volleyStringRequst(String url) {
@@ -75,16 +75,18 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Volley", response.toString());
-                        responseString = response;
+                        fetchingJoke = false;
                         //Showing response to world after fetching it.
                         jokeText = response;
                         mCountDownLatch.countDown();
-                        Toast.makeText(getBaseContext(), responseString, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), jokeText, Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        fetchingJoke = false;
+                        jokeText = null;
                         mCountDownLatch.countDown();
                         VolleyLog.d("Volley", "Error: " + error.getMessage());
                     }
@@ -96,9 +98,9 @@ public class MainActivity extends ActionBarActivity {
         this.waitForResponse();
     }
 
-
+    public volatile boolean fetchingJoke = false;
     CountDownLatch mCountDownLatch = new CountDownLatch(1);
-    String jokeText = "default text";
+    public String jokeText = "default text";
 
     public void waitForResponse(){
 
@@ -114,9 +116,15 @@ public class MainActivity extends ActionBarActivity {
                 }
                 mainThreadHandler.post(new Runnable() {
                     public void run(){
-                        Intent intent = new Intent(getBaseContext(), JokeActicity.class);
-                        intent.putExtra("Joke", jokeText);
-                        startActivity(intent);
+                        switch ((String)getResources().getText(R.string.flavor_type)){
+                            case "paid":
+                                Intent intent = new Intent(getBaseContext(), JokeActicity.class);
+                                intent.putExtra("Joke", jokeText);
+                                startActivity(intent);
+                            case "free":
+                            default:
+                                Toast.makeText(getBaseContext(), jokeText, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }

@@ -25,10 +25,12 @@ public class FetchingJokesTest extends ActivityUnitTestCase<MainActivity> {
     public void FetchSingleJoke() {
         mActivityRule.getActivity();
 
-        ((MainActivity)mActivityRule.getActivity()).tellJoke(null);
+        MainActivity mActivity = ((MainActivity) mActivityRule.getActivity());
+        mActivity.tellJoke(null);
 
+        //wait for volley to fetch response.
+        while (mActivity.fetchingJoke);
 
-        //assertThat(activity, new StartedMatcher(NextActivity.class));
-        assert true;
+        assert (mActivity.jokeText != null);
     }
 }
