@@ -17,3 +17,25 @@ allprojects {
         jcenter()
     }
 }
+
+
+task runAppEngine (dependsOn: ":backend:appengineRun") {
+    project(":backend").afterEvaluate { backend ->
+        backend.extensions.appengine.daemon = true
+        backend.extensions.appengine.httpPort = 8087
+        println(" --> starting gce module!")
+    }
+    doLast {
+        println(" --> now running tests!")
+        project(':app').tasks['connectedAndroidTest']
+    }
+}
+
+
+task runUdacityTask(type: GradleBuild){
+
+    dependsOn "runAppEngine"
+
+    tasks[":backend:appengineStop"]
+    println(" --> stoping gce module!")
+}
