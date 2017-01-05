@@ -9,7 +9,7 @@
     <facet type="app-engine-gradle" name="App Engine Gradle">
       <configuration>
         <option name="HTTP_ADDRESS" value="localhost" />
-        <option name="HTTP_PORT" value="8086" />
+        <option name="HTTP_PORT" value="6789" />
         <option name="WAR_DIR" value="C:\MichalH\Android\Projects\udacity_examples\FinalProject\backend\build\exploded-app" />
         <option name="WEB_APP_DIR" value="C:\MichalH\Android\Projects\udacity_examples\FinalProject\backend\src\main\webapp" />
         <option name="APPENGINE_SDKROOT" value="C:\Users\michal.hornak\.gradle\appengine-sdk\appengine-java-sdk-1.9.18" />

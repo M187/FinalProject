@@ -30,6 +30,7 @@ public class FetchingJokesTest extends ActivityUnitTestCase<MainActivity> {
 
         //wait for volley to fetch response.
         while (mActivity.fetchingJoke);
+        System.out.println("Testing!");
 
         assert (mActivity.jokeText != null);
     }
