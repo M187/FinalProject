@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
 
     private final String host = "127.0.0.1";
     private final String port = "8080";
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mRequestQueue = getRequestQueue();
+        this.spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        this.spinner.setVisibility(View.GONE);
     }
 
 
@@ -63,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         fetchingJoke = true;
+        this.spinner.setVisibility(View.VISIBLE);
         volleyStringRequst("http://" + host + ":" + port + "/_ah/api/myApi/v1/joke");
     }
 
@@ -78,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Volley", response.toString());
+                        spinner.setVisibility(View.GONE);
                         fetchingJoke = false;
                         //Showing response to world after fetching it.
                         jokeText = response;
@@ -88,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        spinner.setVisibility(View.GONE);
                         fetchingJoke = false;
                         //jokeText = null;
                         mCountDownLatch.countDown();
