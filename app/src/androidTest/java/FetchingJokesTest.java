@@ -23,15 +23,14 @@ public class FetchingJokesTest extends ActivityUnitTestCase<MainActivity> {
 
     @Test
     public void FetchSingleJoke() {
-        mActivityRule.getActivity();
-
         MainActivity mActivity = ((MainActivity) mActivityRule.getActivity());
-        mActivity.tellJoke(null);
+        mActivity.volleyStringRequst("http://" + mActivity.host + ":" + mActivity.port + "/_ah/api/myApi/v1/joke");
 
         //wait for volley to fetch response.
         while (mActivity.fetchingJoke);
         System.out.println("Testing!");
 
-        assert (mActivity.jokeText != null);
+        //Check if response was correct
+        assertTrue(mActivity.jokeText != null);
     }
 }

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -28,8 +27,8 @@ public class MainActivity extends ActionBarActivity {
 
     private RequestQueue mRequestQueue;
 
-    private final String host = "127.0.0.1";
-    private final String port = "8080";
+    public final String host = "127.0.0.1";
+    public final String port = "8080";
     private ProgressBar spinner;
 
     @Override
@@ -45,37 +44,28 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void tellJoke(View view) {
-        fetchingJoke = true;
         this.spinner.setVisibility(View.VISIBLE);
         volleyStringRequst("http://" + host + ":" + port + "/_ah/api/myApi/v1/joke");
+        this.waitForResponse();
     }
 
     public void volleyStringRequst(String url) {
-
+        fetchingJoke = true;
         String REQUEST_TAG = "com.androidtutorialpoint.volleyStringRequest";
-        //progressDialog.setMessage("Loading...");
-        //progressDialog.show();
 
         StringRequest strReq = new StringRequest(
                 url,
@@ -96,16 +86,13 @@ public class MainActivity extends ActionBarActivity {
                     public void onErrorResponse(VolleyError error) {
                         spinner.setVisibility(View.GONE);
                         fetchingJoke = false;
-                        //jokeText = null;
+                        jokeText = null;
                         mCountDownLatch.countDown();
                         VolleyLog.d("Volley", "Error: " + error.getMessage());
                     }
                 });
         // Adding String request to request queue
         this.addToRequestQueue(strReq, REQUEST_TAG);
-
-        //Waiting for response;
-        this.waitForResponse();
     }
 
     public volatile boolean fetchingJoke = false;
