@@ -33,7 +33,7 @@ task runAppEngine {
 
     project(":backend").afterEvaluate { backend ->
         backend.extensions.appengine.daemon = true
-        backend.extensions.appengine.httpPort = 6789
+        backend.extensions.appengine.httpPort = System.properties['port'].toInteger();
     }
 
     doLast {

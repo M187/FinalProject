@@ -2,11 +2,14 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityUnitTestCase;
 
+import com.udacity.gradle.builditbigger.JokeFetcher;
 import com.udacity.gradle.builditbigger.MainActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by michal.hornak on 12/29/2016.
@@ -23,14 +26,17 @@ public class FetchingJokesTest extends ActivityUnitTestCase<MainActivity> {
 
     @Test
     public void FetchSingleJoke() {
-        MainActivity mActivity = ((MainActivity) mActivityRule.getActivity());
-        mActivity.volleyStringRequst("http://" + mActivity.host + ":" + mActivity.port + "/_ah/api/myApi/v1/joke");
 
-        //wait for volley to fetch response.
-        while (mActivity.fetchingJoke);
-        System.out.println("Testing!");
+        final CountDownLatch mCountDownLatch = new CountDownLatch(1);
+        JokeFetcher mJokeFetcher = new JokeFetcher();
+        mJokeFetcher.setCountDownLatch(mCountDownLatch);
+        mJokeFetcher.execute("http://" + MainActivity.host + ":" + MainActivity.port + "/_ah/api/myApi/v1/joke");
 
-        //Check if response was correct
-        assertTrue(mActivity.jokeText != null);
+        try {
+            mCountDownLatch.await();
+            assertTrue(mJokeFetcher.get() != null || mJokeFetcher.get() != "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
